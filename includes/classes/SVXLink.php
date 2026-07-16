@@ -204,13 +204,17 @@ class SVXLink {
 
 	public function build_tx($curPort, $curPortType = 'GPIO') {
 		$audio_dev = explode("|", $this->portsArray[$curPort]['txAudioDev']);
+		$repeater_timeout = '300';
+		if (isset($this->settingsArray['repeaterTimeoutSec']) && is_numeric($this->settingsArray['repeaterTimeoutSec'])) {
+			$repeater_timeout = $this->settingsArray['repeaterTimeoutSec'];
+		}
 
 		$tx_array['TX_Port'.$curPort] = [
 		'TYPE' => 'Local',
 		'AUDIO_DEV' => $audio_dev[0],
 		'AUDIO_CHANNEL' => $audio_dev[1],
 		'PTT_HANGTIME' => ($this->settingsArray['txTailValueSec'] * 1000),
-		'TIMEOUT' => '300',
+		'TIMEOUT' => $repeater_timeout,
 		'TX_DELAY' => '50',
 		];
 
@@ -446,7 +450,8 @@ class SVXLink {
 		}
 		# ID only if there is activity, only affect short IDs
 		if ($this->settingsArray['ID_Only_When_Active'] == 'True') {
-			$id_array['IDENT_ONLY_AFTER_TX'] = '4';
+			$identOnlyAfterTx = isset($this->settingsArray['ID_Only_After_TX_Sec']) ? $this->settingsArray['ID_Only_After_TX_Sec'] : '4';
+			$id_array['IDENT_ONLY_AFTER_TX'] = (is_numeric($identOnlyAfterTx) && $identOnlyAfterTx >= 0) ? (int) $identOnlyAfterTx : '4';
 		}
 
 

@@ -16,6 +16,7 @@ include('includes/header.php');
 
 $AudioFiles = new AudioFiles();
 $identificationAudio = $AudioFiles->get_audio_filesJSON('identification');
+$idOnlyAfterTxSec = isset($settings['ID_Only_After_TX_Sec']) ? $settings['ID_Only_After_TX_Sec'] : '4';
 ?>
 
 
@@ -58,7 +59,7 @@ $identificationAudio = $AudioFiles->get_audio_filesJSON('identification');
 						  <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="right" title="<?=_('...')?>"></i>
                         </label>
                         <div class="col-md-6 col-sm-9 col-xs-7">
-                          <input type="number" id="ID_Short_IntervalMin" name="ID_Short_IntervalMin" class="form-control" value="<?= $settings['ID_Short_IntervalMin'] ?>" placeholder="<?=_('Minutes')?>" required>
+                          <input type="number" min="1" step="1" id="ID_Short_IntervalMin" name="ID_Short_IntervalMin" class="form-control" value="<?= $settings['ID_Short_IntervalMin'] ?>" placeholder="<?=_('Minutes')?>" required>
                         </div>
                       </div>
 
@@ -74,12 +75,23 @@ $identificationAudio = $AudioFiles->get_audio_filesJSON('identification');
 
                       <div id="ID_After_TX_Grp" class="form-group col-md-6 col-sm-6 col-xs-12" style="display:none;">
                         <div class="gray-box">
-                        <label class="control-label col-md-9"><?=_('ID after TX')?>
-						  <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="right" title="<?=_('...')?>"></i>
+                        <label class="control-label col-md-9"><?=_('Only ID after TX')?>
+						  <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="right" title="<?=_('Only send short identifications after recent repeater activity instead of identifying continuously on the short ID interval.')?>"></i>
                         </label>
                         <div class="col-md-3">
 						  <input type="hidden" name="ID_Only_When_Active" value="False">
                           <input id="ID_Only_When_Active" name="ID_Only_When_Active" type="checkbox" value="True" class="js-switch"<?= $settings['ID_Only_When_Active'] == 'True' ? ' checked':'' ?>/> 
+                        </div>
+                        </div>
+                      </div>
+
+                      <div id="ID_After_TX_Delay_Grp" class="form-group col-md-6 col-sm-6 col-xs-12" style="display:none;">
+                        <div class="gray-box">
+                        <label class="control-label col-md-8"><?=_('After TX Delay')?>
+						  <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="right" title="<?=_('The number of seconds after the last identification before a new transmission can trigger another short identification.')?>"></i>
+                        </label>
+                        <div class="col-md-4">
+                          <input id="ID_Only_After_TX_Sec" name="ID_Only_After_TX_Sec" type="number" min="0" step="1" class="form-control" value="<?= $idOnlyAfterTxSec ?>" placeholder="<?=_('Seconds')?>">
                         </div>
                         </div>
                       </div>
@@ -127,7 +139,7 @@ $identificationAudio = $AudioFiles->get_audio_filesJSON('identification');
 						  <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="right" title="<?=_('The number of minutes between long identifications. The purpose of the long identification is to transmit some more information about the station. A good value for a repeater is every 60 minutes.')?>"></i>
                         </label>
                         <div class="col-md-6 col-sm-9 col-xs-7">
-                          <input id="ID_Long_IntervalMin" name="ID_Long_IntervalMin" type="number" class="form-control" value="<?= $settings['ID_Long_IntervalMin'] ?>" placeholder="<?=_('Minutes')?>">
+                          <input id="ID_Long_IntervalMin" name="ID_Long_IntervalMin" type="number" min="1" step="1" class="form-control" value="<?= $settings['ID_Long_IntervalMin'] ?>" placeholder="<?=_('Minutes')?>">
                         </div>
                       </div>
 
